@@ -224,5 +224,16 @@ public class CS_PlayerControl : MonoBehaviour {
 		}
 	}
 
+	public GameObject GetMyCamera () {
+		return myCamera;
+	}
+
+	public Vector3 GetMyCameraCenterDelta () {
+		return myCameraCenterDelta;
+	}
+
+	public void SetMyCameraCenterDelta (Vector3 g_myCameraCenterDelta) {
+		myCameraCenterDelta = g_myCameraCenterDelta;
+	}
 
 }
