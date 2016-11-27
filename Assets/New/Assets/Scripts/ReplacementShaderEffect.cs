@@ -11,19 +11,6 @@ public class ReplacementShaderEffect : MonoBehaviour
     public Color endColor;
 	Camera mainCam;
 
-	// [Range(0.0f,1.0f)]
-	// public float BlueMultColor;
-	// [Range(0.0f,1.0f)]
-	// public float PinkMultColor;
-	// [Range(0.0f,1.0f)]
-	// public float YellowMultColor;
-
-	// [Range(-2.0f,2.0f)]
-	// public float BluePlusColor;
-	// [Range(-2.0f,2.0f)]
-	// public float PinkPlusColor;
-	// [Range(-2.0f,2.0f)]
-	// public float YellowPlusColor;
 
 
 	void Start() {	
@@ -45,14 +32,6 @@ public class ReplacementShaderEffect : MonoBehaviour
     	Shader.SetGlobalColor("_StartColor", startColor);
     	Shader.SetGlobalColor("_MidColor", midColor);
     	Shader.SetGlobalColor("_EndColor", endColor);
-  //       Shader.SetGlobalColor("_OverDrawColor", OverDrawColor);
-		// Shader.SetGlobalColor("_OverDrawColorPlus", OverDrawColorPlus);
-		// Shader.SetGlobalFloat("_BlueMultColor", BlueMultColor);
-		// Shader.SetGlobalFloat("_PinkMultColor", PinkMultColor);
-		// Shader.SetGlobalFloat("_YellowMultColor", YellowMultColor);
-		// Shader.SetGlobalFloat("_BluePlusColor", BluePlusColor);
-		// Shader.SetGlobalFloat("_PinkPlusColor", PinkPlusColor);
-		// Shader.SetGlobalFloat("_YellowPlusColor", YellowPlusColor);
 
     }
 
@@ -66,4 +45,22 @@ public class ReplacementShaderEffect : MonoBehaviour
     {
         GetComponent<Camera>().ResetReplacementShader();
     }
+
+	void ChangeStartColor (Color newStartColor) {
+
+		startColor = newStartColor;
+
+	}
+
+	void ChangeMidColor (Color newMidColor) {
+
+		midColor = newMidColor;
+
+	}
+
+	void ChangeEndColor (Color newEndColor) {
+
+		endColor = newEndColor;
+
+	}
 }
