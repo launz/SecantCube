@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class CS_Portal : MonoBehaviour {
+	[SerializeField] Color myStartColor;
+	[SerializeField] Color myMidColor;
+	[SerializeField] Color myEndColor;
 	[SerializeField] GameObject myExit;
 	private bool isOn;
 
@@ -43,6 +46,8 @@ public class CS_Portal : MonoBehaviour {
 			other.GetComponent<CS_PlayerControl> ().SetMyCameraCenterDelta (
 				RotateVecter (other.GetComponent<CS_PlayerControl> ().GetMyCameraCenterDelta (), this.transform, myExit.transform)
 			);
+
+			t_camera.GetComponent<ReplacementShaderEffect> ().ChangeColors (myStartColor, myMidColor, myEndColor);
 
 //			myCopy.transform.position = myExit.transform.position;
 //			myCopy.transform.rotation = myExit.transform.rotation;

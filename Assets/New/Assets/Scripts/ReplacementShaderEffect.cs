@@ -5,15 +5,24 @@ using System.Collections.Generic;
 [ExecuteInEditMode]
 public class ReplacementShaderEffect : MonoBehaviour
 {
-    public Shader ReplacementShader;
-    public Color startColor;
-    public Color midColor;
-    public Color endColor;
+	[SerializeField] Shader ReplacementShader;
+	[SerializeField] Color startColor;
+	[SerializeField] Color midColor;
+	[SerializeField] Color endColor;
+
 	Camera mainCam;
 
 
+	private Color startColorTarget;
+	private Color midColorTarget;
+	private Color endColorTarget;
+	[SerializeField] float myColorChangeSpeed = 1;
+
 
 	void Start() {	
+		startColorTarget = startColor;
+		midColorTarget = midColor;
+		endColorTarget = endColor;
 
 		mainCam = GetComponent<Camera> ();
 		Shader.SetGlobalColor("_StartColor", startColor);
@@ -25,6 +34,14 @@ public class ReplacementShaderEffect : MonoBehaviour
 	void Update() {		//	make background color always the same as end color in shader
 		
 		mainCam.backgroundColor = endColor;
+
+		startColor = Color.Lerp (startColor, startColorTarget, Time.deltaTime * myColorChangeSpeed);
+		midColor = Color.Lerp (midColor, midColorTarget, Time.deltaTime * myColorChangeSpeed);
+		endColor = Color.Lerp (endColor, endColorTarget, Time.deltaTime * myColorChangeSpeed);
+
+		Shader.SetGlobalColor("_StartColor", startColor);
+		Shader.SetGlobalColor("_MidColor", midColor);
+		Shader.SetGlobalColor("_EndColor", endColor);
 	}
 
     void OnValidate()
@@ -47,20 +64,22 @@ public class ReplacementShaderEffect : MonoBehaviour
     }
 
 	void ChangeStartColor (Color newStartColor) {
-
-		startColor = newStartColor;
-
+		startColorTarget = newStartColor;
 	}
 
 	void ChangeMidColor (Color newMidColor) {
-
-		midColor = newMidColor;
-
+		midColorTarget = newMidColor;
 	}
 
 	void ChangeEndColor (Color newEndColor) {
-
-		endColor = newEndColor;
-
+		endColorTarget = newEndColor;
 	}
+
+	public void ChangeColors (Color g_start, Color g_mid, Color g_end) {
+		ChangeStartColor (g_start);
+		ChangeMidColor (g_mid);
+		ChangeEndColor (g_end);
+		Debug.Log ("ChangeColors");
+	}
+
 }

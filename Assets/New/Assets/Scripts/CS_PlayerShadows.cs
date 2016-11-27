@@ -64,7 +64,7 @@ public class CS_PlayerShadows : MonoBehaviour {
 
 			g_shadow.transform.position = t_hit.point;
 
-			Debug.Log (t_hit.transform.name + " " +t_hit.transform.position);
+//			Debug.Log (t_hit.transform.name + " " +t_hit.transform.position);
 
 		}
 
