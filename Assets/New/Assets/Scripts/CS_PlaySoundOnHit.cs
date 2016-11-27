@@ -6,12 +6,14 @@ public class CS_PlaySoundOnHit : MonoBehaviour {
 	[SerializeField] float myVolume = 0;
 	[SerializeField] float myPitch = 1;
 
-	void OnCollisionEnter (Collision collision) {
-		PlaySFX ();
+	void OnCollisionEnter (Collision g_collision) {
+		if (g_collision.transform.tag == CS_Global.TAG_BOOST)
+			PlaySFX ();
 	}
 
-	void OnTriggerEnter (Collider other) {
-		PlaySFX ();
+	void OnTriggerEnter (Collider g_other) {
+		if (g_other.tag == CS_Global.TAG_BOOST)
+			PlaySFX ();
 	}
 
 	public void PlaySFX () {
