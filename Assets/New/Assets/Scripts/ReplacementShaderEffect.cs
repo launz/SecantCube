@@ -29,6 +29,9 @@ public class ReplacementShaderEffect : MonoBehaviour
 	void Start() {	
 
 		mainCam = GetComponent<Camera> ();
+		Shader.SetGlobalColor("_StartColor", startColor);
+		Shader.SetGlobalColor("_MidColor", midColor);
+		Shader.SetGlobalColor("_EndColor", endColor);
 
 	}
 
