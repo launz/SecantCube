@@ -14,9 +14,11 @@ public class CS_PlayerControl : MonoBehaviour {
 
 	[Header("Camera")]
 	[SerializeField] GameObject myCamera;
+	[SerializeField] Transform myCameraCollide;
+
 	[SerializeField] float myCameraDistance = 10;
 	[SerializeField] float myCameraSpeed = 4;
-	[SerializeField] float myVerticalLimit = 20;
+	[SerializeField] float myVerticalLimitRatio = 0.8f;
 	private Vector3 myCameraCenterDelta;
 	[SerializeField] float myCameraCenterDistanceRatio = 0.5f;
 	[SerializeField] float myCameraCenterSpeed = 4;
@@ -75,15 +77,48 @@ public class CS_PlayerControl : MonoBehaviour {
 
 		//camera limit
 //		if (t_nextAngle < 180 - myVerticalLimit && t_nextAngle > myVerticalLimit)
-			myCamera.transform.position += myCamera.transform.up * translationVertical;
-		myCamera.transform.position -= myCamera.transform.right * translationHorizontal;
+//			myCamera.transform.position += myCamera.transform.up * translationVertical;
+//		myCamera.transform.position -= myCamera.transform.right * translationHorizontal;
+
+		if ((Mathf.Abs (myCamera.transform.position.y - (this.transform.position + myCameraCenterDelta).y) > Vector3.Distance (myCamera.transform.position, (this.transform.position + myCameraCenterDelta)) * myVerticalLimitRatio) &&
+		    ((myCamera.transform.position.y > (this.transform.position + myCameraCenterDelta).y && translationVertical > 0) ||
+		    (myCamera.transform.position.y < (this.transform.position + myCameraCenterDelta).y && translationVertical < 0))) {
+			//camera movement
+			myCamera.transform.position = myCamera.transform.position - 
+				myCamera.transform.right * translationHorizontal;
+			Debug.Log ("Limit");
+//			myCamera.GetComponent<Rigidbody> ().MovePosition (
+//				myCamera.transform.position -
+//				myCamera.transform.right * translationHorizontal
+//			);
+
+			//player movement
+			myRigidbody.velocity = (
+			    myRigidbody.velocity.normalized + (
+			        myCamera.transform.right * translationHorizontal
+			    ) * Time.deltaTime * myVelocityRatio
+			).normalized * myRigidbody.velocity.magnitude;
+		} else {
+			//camera movement
+			myCamera.transform.position = myCamera.transform.position + 
+				myCamera.transform.up * translationVertical - 
+				myCamera.transform.right * translationHorizontal;
+			
+//			myCamera.GetComponent<Rigidbody> ().MovePosition (
+//				myCamera.transform.position +
+//				myCamera.transform.up * translationVertical -
+//				myCamera.transform.right * translationHorizontal
+//			);
+
+			//player movement
+			myRigidbody.velocity = (
+				myRigidbody.velocity.normalized + (
+					myCamera.transform.right * translationHorizontal - myCamera.transform.up * translationVertical
+				) * Time.deltaTime * myVelocityRatio
+			).normalized * myRigidbody.velocity.magnitude;
+		}
 
 
-		myRigidbody.velocity = (
-			myRigidbody.velocity.normalized + (
-				myCamera.transform.right * translationHorizontal - myCamera.transform.up * translationVertical
-			) * Time.deltaTime * myVelocityRatio
-		).normalized * myRigidbody.velocity.magnitude;
 
 		//airResistance
 		myRigidbody.AddForce(-myRigidbody.velocity.normalized * myRigidbody.velocity.magnitude * myRigidbody.velocity.magnitude * myAirResistance);
@@ -95,16 +130,30 @@ public class CS_PlayerControl : MonoBehaviour {
 		UpdateCameraShake ();
 	}
 
+	void OnDrawGizmos(){
+		Gizmos.color = Color.red;
+		float translationHorizontal = Input.GetAxis("Horizontal") * myHorizontalForce * Time.deltaTime;
+
+		Gizmos.DrawRay (transform.position, myCamera.transform.right * translationHorizontal);
+		Gizmos.DrawSphere (transform.position + myCamera.transform.up * 2f,0.3f);
+	}
+
 	private void UpdateCamera () {
 		Vector3 t_targetPosition = this.transform.position - myCamera.transform.position;
 
 		t_targetPosition.Normalize ();
 
 		t_targetPosition = this.transform.position - t_targetPosition * myCameraDistance;
+
+		//Move Camera
 		myCamera.transform.position = Vector3.Lerp (myCamera.transform.position, t_targetPosition, Time.deltaTime * myCameraSpeed);
+//		Vector3 newPosition = Vector3.Lerp(myCamera.transform.position, t_targetPosition, Time.deltaTime * myCameraSpeed);
+//		myCamera.GetComponent<Rigidbody>().MovePosition( newPosition );
 
 
 		Vector3 t_lookAt = - Input.GetAxis ("Vertical") * myCamera.transform.up + Input.GetAxis ("Horizontal") * myCamera.transform.right;
+//		Vector3 t_lookAt = Input.GetAxis ("Horizontal") * myCamera.transform.right;
+//		Vector3 t_lookAt = new Vector3();
 		t_lookAt = t_lookAt - Vector3.Project (t_lookAt, myCamera.transform.position - this.transform.position);
 		t_lookAt.Normalize ();
 		if (t_lookAt.magnitude != 0) {
@@ -113,7 +162,14 @@ public class CS_PlayerControl : MonoBehaviour {
 			myCameraCenterDelta = Vector3.Lerp (myCameraCenterDelta, t_lookAt, Time.deltaTime * myCameraCenterSpeed);
 		}
 //		Debug.Log (this.transform.position + " " + myCameraCenterDelta);
+
+		//Update Camera collide
+		myCameraCollide.position = myCameraCenterDelta + this.transform.position;
+		myCameraCollide.GetComponent<Rigidbody> ().MovePosition (myCameraCenterDelta + this.transform.position);
+
 		myCamera.transform.LookAt (this.transform.position + myCameraCenterDelta);
+
+		myCamera.GetComponent<Rigidbody> ().velocity = Vector3.zero;
 
 	}
 
