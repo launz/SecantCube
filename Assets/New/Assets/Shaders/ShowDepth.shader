@@ -90,6 +90,7 @@
 		}
 	}
 
+
 	SubShader
 	{
 		Tags
@@ -136,4 +137,59 @@
 			ENDCG
 		}
 	}
+
+//	SubShader
+//    {
+//        Tags
+//        {
+//            "RenderType"="Grass"
+//        }
+//
+//        ZWrite On
+//
+//        Pass
+//        {
+//            CGPROGRAM
+//            #pragma vertex vert
+//            #pragma fragment frag
+//
+//            #include "UnityCG.cginc"
+//
+//            struct appdata
+//            {
+//                float4 vertex : POSITION;
+//            };
+//
+//            struct v2f
+//            {
+//                float4 vertex : SV_POSITION;
+//                float depth : DEPTH;
+//            };
+//
+//            v2f vert (appdata v)
+//            {
+//                v2f o;
+//                o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+//                o.depth = -mul(UNITY_MATRIX_MV, v.vertex).z *_ProjectionParams.w;
+//                return o;
+//            }
+//            
+//            half4 _Color;
+//
+//            half4 _StartColor;
+//            half4 _MidColor;
+//            half4 _EndColor;
+//
+//            fixed4 frag (v2f i) : SV_Target
+//            {
+//
+//                return (max (0, 1 - i.depth * 2) * _StartColor + (0.5 - abs (0.5 - i.depth)) * 2  * _MidColor + max (0, i.depth * 2 - 1) * _EndColor) * _Color;
+////
+////                float invert = 1 - i.depth;
+////                return fixed4(invert, invert, invert, invert) * _Color;
+//                return _Color;
+//            }
+//            ENDCG
+//        }
+//    }
 }
