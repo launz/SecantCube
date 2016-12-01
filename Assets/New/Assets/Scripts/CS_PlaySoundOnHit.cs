@@ -9,8 +9,19 @@ public class CS_PlaySoundOnHit : MonoBehaviour {
 	[Header("Particle")]
 	[SerializeField] GameObject myParticleEffect;
 
+	[Header("Color")]
+	[SerializeField] Color myColorNormal;
+	[SerializeField] Color myColorHit;
+	[SerializeField] float myColorSpeed;
+	private Color myColor;
+
 	void Start () {
 		myParticleEffect = Instantiate (myParticleEffect, this.transform) as GameObject; 
+		this.GetComponent<Renderer> ().material.color = myColorNormal;
+	}
+
+	void Update () {
+		this.GetComponent<Renderer> ().material.color = Color.Lerp (this.GetComponent<Renderer> ().material.color, myColorNormal, Time.deltaTime * myColorSpeed);
 	}
 
 	void OnCollisionEnter (Collision g_collision) {
@@ -19,6 +30,7 @@ public class CS_PlaySoundOnHit : MonoBehaviour {
 		PlaySFX ();
 
 		myParticleEffect.GetComponent<ParticleSystem> ().Play ();
+		this.GetComponent<Renderer> ().material.color = myColorHit;
 	}
 
 	void OnTriggerEnter (Collider g_other) {
@@ -27,6 +39,7 @@ public class CS_PlaySoundOnHit : MonoBehaviour {
 		PlaySFX ();
 
 		myParticleEffect.GetComponent<ParticleSystem> ().Play ();
+		this.GetComponent<Renderer> ().material.color = myColorHit;
 	}
 
 	public void PlaySFX () {
