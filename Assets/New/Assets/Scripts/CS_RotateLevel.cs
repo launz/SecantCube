@@ -19,9 +19,10 @@ public class CS_RotateLevel : MonoBehaviour {
 			return;
 
 		Debug.Log("rotate!!!!!!" + myTargetRotation.eulerAngles);
-		Vector3.Lerp (this.transform.rotation.eulerAngles, myTargetRotation.eulerAngles, Time.deltaTime * myRotationSpeed);
-		//Quaternion.Lerp (this.gameObject.transform.rotation, myTargetRotation, Time.deltaTime * myRotationSpeed);
-		this.gameObject.transform.position = myRotationCenterPosition - myRotationCenter.position + this.transform.position;
+//		Vector3.Lerp (this.transform.rotation.eulerAngles, myTargetRotation.eulerAngles, Time.deltaTime * myRotationSpeed);
+//		this.transform.rotation = myTargetRotation;
+		this.transform.rotation = Quaternion.Lerp (this.transform.rotation, myTargetRotation, Time.deltaTime * myRotationSpeed);
+		this.transform.position = myRotationCenterPosition - myRotationCenter.position + this.transform.position;
 	}
 
 	public void SetRotation (Quaternion g_rotation, Transform g_center) {
