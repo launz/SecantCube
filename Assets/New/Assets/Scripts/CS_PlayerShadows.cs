@@ -18,6 +18,10 @@ public class CS_PlayerShadows : MonoBehaviour {
 	GameObject upShadow;
 	GameObject downShadow;
 
+	private int layerMask = 768;
+
+
+
 
 	void Start () {
 		forwardShadow = Instantiate (shadow) as GameObject;
@@ -60,7 +64,9 @@ public class CS_PlayerShadows : MonoBehaviour {
 		RaycastHit t_hit;
 		Ray t_ray = new Ray (transform.position, g_direction);
 
-		if (Physics.Raycast (t_ray, out t_hit)) {
+
+
+		if (Physics.Raycast (t_ray, out t_hit,500f,1)) {
 
 			g_shadow.transform.position = t_hit.point;
 
