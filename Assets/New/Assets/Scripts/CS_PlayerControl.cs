@@ -51,6 +51,13 @@ public class CS_PlayerControl : MonoBehaviour {
 	[SerializeField] float myBoost_RechargePerSecond = 0.2f;
 	[SerializeField] bool myBoost_IsUsedByPercentage = true;
 	[SerializeField] float myBoost_UsePerSecond = 0.1f;
+
+	[Header("BoostDisplay")]
+	[SerializeField] GameObject myBoostDisplay;
+	[SerializeField] Color myBoostDisplay_ColorMax;
+	[SerializeField] Color myBoostDisplay_ColorMin;
+	[SerializeField] float myBoostDisplay_SizeMax;
+	[SerializeField] float myBoostDisplay_SizeMin;
 	// Use this for initialization
 	void Start () {
 		if (myCamera == null) {
@@ -207,6 +214,13 @@ public class CS_PlayerControl : MonoBehaviour {
 
 
 		}
+
+		//show boost amount
+		myBoostDisplay.GetComponent<Renderer> ().material.color = 
+			myBoost_EnergyCurrent / myBoost_EnergyMax * (myBoostDisplay_ColorMax - myBoostDisplay_ColorMin) + myBoostDisplay_ColorMin;
+		myBoostDisplay.transform.localScale = Vector3.one *
+			(myBoost_EnergyCurrent / myBoost_EnergyMax * (myBoostDisplay_SizeMax - myBoostDisplay_SizeMin) +
+				myBoostDisplay_SizeMin);
 	}
 
 	private void UpdateCameraBlur () {
