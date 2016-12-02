@@ -283,15 +283,25 @@ public class CS_PlayerControl : MonoBehaviour {
 
 	void OnCollisionStay (Collision g_collision) {
 		if (g_collision.transform.tag == CS_Global.TAG_BOOST) {
-			//recharge boost energy
-			if(myBoost_IsRechargedByPercentage)
-				myBoost_EnergyCurrent += myBoost_EnergyMax * myBoost_RechargePerSecond * Time.deltaTime;
-			else
-				myBoost_EnergyCurrent +=  myBoost_RechargePerSecond * Time.deltaTime;
-			//check if the boost energy > max
-			if (myBoost_EnergyCurrent > myBoost_EnergyMax)
-				myBoost_EnergyCurrent = myBoost_EnergyMax;
+			BoostRecover ();
 		}
+	}
+
+	void OnTriggerStay(Collider g_other) {
+		if (g_other.tag == CS_Global.TAG_BOOST) {
+			BoostRecover ();
+		}
+	}
+
+	private void BoostRecover () {
+		//recharge boost energy
+		if(myBoost_IsRechargedByPercentage)
+			myBoost_EnergyCurrent += myBoost_EnergyMax * myBoost_RechargePerSecond * Time.deltaTime;
+		else
+			myBoost_EnergyCurrent +=  myBoost_RechargePerSecond * Time.deltaTime;
+		//check if the boost energy > max
+		if (myBoost_EnergyCurrent > myBoost_EnergyMax)
+			myBoost_EnergyCurrent = myBoost_EnergyMax;
 	}
 
 	public GameObject GetMyCamera () {
