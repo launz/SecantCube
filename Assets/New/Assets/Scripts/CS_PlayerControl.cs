@@ -93,7 +93,7 @@ public class CS_PlayerControl : MonoBehaviour {
 			//camera movement
 			myCamera.transform.position = myCamera.transform.position - 
 				myCamera.transform.right * translationHorizontal;
-			Debug.Log ("Limit");
+			//Debug.Log ("Limit");
 //			myCamera.GetComponent<Rigidbody> ().MovePosition (
 //				myCamera.transform.position -
 //				myCamera.transform.right * translationHorizontal
