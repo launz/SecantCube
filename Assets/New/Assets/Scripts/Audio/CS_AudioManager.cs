@@ -2,6 +2,7 @@
 //http://www.blog.silentkraken.com/2010/04/06/audiomanager/
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
 
 public class CS_AudioManager : MonoBehaviour {
 	
@@ -10,6 +11,12 @@ public class CS_AudioManager : MonoBehaviour {
 	[SerializeField] GameObject myPrefabSFX;
 
 	[SerializeField] AudioSource myAudioSource;
+
+	[SerializeField] AudioMixer myAudioMixer;
+
+	[SerializeField] AudioMixerSnapshot[] myMixerSnapshots;
+
+	private int myMixerSnapshotNumber;
 
 	//========================================================================
 	public static CS_AudioManager Instance {
@@ -99,6 +106,19 @@ public class CS_AudioManager : MonoBehaviour {
 
 	public void StopBGM () {
 		myAudioSource.Stop ();
+	}
+
+	//========================================================================
+
+	public void PlaySnapshotAdd (int g_number) {
+		if (g_number <= myMixerSnapshotNumber)
+			return;
+
+		if (myMixerSnapshotNumber >= myMixerSnapshots.Length)
+			myMixerSnapshotNumber = myMixerSnapshots.Length - 1;
+
+		myMixerSnapshotNumber = g_number;
+		myMixerSnapshots [g_number].TransitionTo (3f);
 	}
 
 }

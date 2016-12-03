@@ -6,6 +6,7 @@ public class CS_Portal : MonoBehaviour {
 	[SerializeField] Color myMidColor;
 	[SerializeField] Color myEndColor;
 	[SerializeField] GameObject myExit;
+	[SerializeField] int myExitLevelNumber;
 	private bool isOn;
 
 //	private GameObject myCopy;
@@ -66,6 +67,8 @@ public class CS_Portal : MonoBehaviour {
 
 //			other.transform.position = myExit.transform.position + myExit.transform.forward;
 //			Camera.main.transform.position = Camera.main.transform.position - this.transform.position + myExit.transform.position + myExit.transform.forward;
+
+			CS_AudioManager.Instance.PlaySnapshotAdd (myExitLevelNumber);
 		}
 	}
 
