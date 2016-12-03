@@ -58,6 +58,10 @@ public class CS_PlayerControl : MonoBehaviour {
 	[SerializeField] Color myBoostDisplay_ColorMin;
 	[SerializeField] float myBoostDisplay_SizeMax;
 	[SerializeField] float myBoostDisplay_SizeMin;
+
+	[Header("Launchpad")]
+	private bool myLaunchpad_IsOn;
+	private Vector3 myLaunchpad_Velocity;
 	// Use this for initialization
 	void Start () {
 		if (myCamera == null) {
@@ -135,6 +139,7 @@ public class CS_PlayerControl : MonoBehaviour {
 		UpdateCameraFieldOfView ();
 		UpdateCamera ();
 		UpdateCameraShake ();
+		UpdateLaunchpad ();
 	}
 
 	void OnDrawGizmos(){
@@ -281,16 +286,42 @@ public class CS_PlayerControl : MonoBehaviour {
 		);
 	}
 
+	private void UpdateLaunchpad () {
+		if (myLaunchpad_IsOn == false)
+			return;
+
+		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || Input.GetButton ("Jump")) {
+			myLaunchpad_IsOn = false;
+			return;
+		}
+
+		myRigidbody.velocity = myLaunchpad_Velocity;
+	}
+
+	public void StartLaunchpad (Vector3 g_velocity) {
+		myLaunchpad_Velocity = g_velocity;
+		myLaunchpad_IsOn = true;
+	}
+
 	void OnCollisionStay (Collision g_collision) {
 		if (g_collision.transform.tag == CS_Global.TAG_BOOST) {
 			BoostRecover ();
 		}
+
+		//Debug.Log ("Hit" + g_collision.transform.name);
+		StopLaunchpad ();
 	}
 
 	void OnTriggerStay(Collider g_other) {
 		if (g_other.tag == CS_Global.TAG_BOOST) {
 			BoostRecover ();
 		}
+		//Debug.Log ("Hit" + g_other.transform.name);
+		StopLaunchpad ();
+	}
+
+	private void StopLaunchpad () {
+		myLaunchpad_IsOn = false;
 	}
 
 	private void BoostRecover () {
