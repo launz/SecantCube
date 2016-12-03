@@ -47,6 +47,10 @@ public class CS_Portal : MonoBehaviour {
 				RotateVecter (other.GetComponent<CS_PlayerControl> ().GetMyCameraCenterDelta (), this.transform, myExit.transform)
 			);
 
+			other.GetComponent<CS_PlayerControl> ().StartLaunchpad (
+				RotateVecter (other.GetComponent<CS_PlayerControl> ().GetLaunchpad (), this.transform, myExit.transform)
+			);
+
 			t_camera.GetComponent<ReplacementShaderEffect> ().ChangeColors (myStartColor, myMidColor, myEndColor);
 
 //			myCopy.transform.position = myExit.transform.position;

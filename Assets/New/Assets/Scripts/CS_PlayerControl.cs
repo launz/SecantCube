@@ -303,28 +303,31 @@ public class CS_PlayerControl : MonoBehaviour {
 		myLaunchpad_IsOn = true;
 	}
 
-	void OnCollisionStay (Collision g_collision) {
-		if (g_collision.transform.tag == CS_Global.TAG_BOOST) {
-			BoostRecover ();
-		}
+	public Vector3 GetLaunchpad () {
+		return myLaunchpad_Velocity;
+	}
 
+	void OnCollisionStay (Collision g_collision) {
+		BoostRecover (g_collision.transform);
 		//Debug.Log ("Hit" + g_collision.transform.name);
-		StopLaunchpad ();
+		StopLaunchpad (g_collision.transform);
 	}
 
 	void OnTriggerStay(Collider g_other) {
-		if (g_other.tag == CS_Global.TAG_BOOST) {
-			BoostRecover ();
-		}
+		BoostRecover (g_other.transform);
 		//Debug.Log ("Hit" + g_other.transform.name);
-		StopLaunchpad ();
+		StopLaunchpad (g_other.transform);
 	}
 
-	private void StopLaunchpad () {
-		myLaunchpad_IsOn = false;
+	private void StopLaunchpad (Transform g_collide) {
+		if (g_collide.tag != CS_Global.TAG_LAUNCHPAD && g_collide.tag != CS_Global.TAG_PORTAL)
+			myLaunchpad_IsOn = false;
 	}
 
-	private void BoostRecover () {
+	private void BoostRecover (Transform g_collide) {
+		if (g_collide.tag != CS_Global.TAG_BOOST)
+			return;
+
 		//recharge boost energy
 		if(myBoost_IsRechargedByPercentage)
 			myBoost_EnergyCurrent += myBoost_EnergyMax * myBoost_RechargePerSecond * Time.deltaTime;
