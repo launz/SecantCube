@@ -198,7 +198,7 @@ public class CS_PlayerControl : MonoBehaviour {
 
 	private void UpdateBoost () {
 		if (Input.GetButton ("Jump") || myLaunchpad_IsOn) {
-			Debug.Log ("Boost");
+//			Debug.Log ("Boost");
 			//Debug.Log ("myBoost_EnergyCurrent: " + myBoost_EnergyCurrent);		
 			//if has energy
 			if (myBoost_EnergyCurrent > 0) {
@@ -233,6 +233,8 @@ public class CS_PlayerControl : MonoBehaviour {
 		}
 
 		//show boost amount
+		if (myBoostDisplay == null)
+			return;
 		myBoostDisplay.GetComponent<Renderer> ().material.color = 
 			myBoost_EnergyCurrent / myBoost_EnergyMax * (myBoostDisplay_ColorMax - myBoostDisplay_ColorMin) + myBoostDisplay_ColorMin;
 		myBoostDisplay.transform.localScale = Vector3.one *

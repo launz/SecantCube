@@ -7,12 +7,15 @@ public class CS_Portal : MonoBehaviour {
 	[SerializeField] Color myEndColor;
 	[SerializeField] GameObject myExit;
 	[SerializeField] int myExitLevelNumber;
-	private bool isOn;
+	private bool isOn = true;
+
+	[SerializeField] GameObject myShowLevel;
+	[SerializeField] GameObject myHideLevel;
 
 //	private GameObject myCopy;
 
 	void Start () {
-		SetIsOn (true);
+		//SetIsOn (true);
 //		myCopy = new GameObject ();
 //		myCopy.transform.position = this.transform.position;
 //		myCopy.transform.rotation = this.transform.rotation;
@@ -20,8 +23,23 @@ public class CS_Portal : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && isOn == true) {
+
 			myExit.GetComponent<CS_Portal> ().SetIsOn (false);
 
+			if (myShowLevel != null) {
+				if (myShowLevel.activeSelf == false) {
+					myShowLevel.SetActive (true);
+					Debug.Log ("Show:" + myShowLevel.name);
+				}
+			}
+
+			if (myHideLevel != null) {
+				if (myHideLevel.activeSelf == true) {
+					myHideLevel.SetActive (false);
+					Debug.Log ("Hide:" + myHideLevel.name);
+				}
+			}
+//			Debug.LogError ("!!!!");
 			GameObject t_camera = other.GetComponent<CS_PlayerControl> ().GetMyCamera ();
 
 			Vector3 t_deltaPosition = other.transform.position - this.transform.position;
@@ -34,11 +52,11 @@ public class CS_Portal : MonoBehaviour {
 
 			Vector3 t_deltaRotation = other.transform.rotation.eulerAngles - this.transform.rotation.eulerAngles;
 			t_deltaRotation = RotateVecter (t_deltaRotation, this.transform, myExit.transform);
-			other.transform.rotation = Quaternion.Euler (myExit.transform.position + t_deltaRotation);
+			other.transform.rotation = Quaternion.Euler (myExit.transform.rotation.eulerAngles + t_deltaRotation);
 
 			t_deltaRotation = t_camera.transform.rotation.eulerAngles - this.transform.rotation.eulerAngles;
 			t_deltaRotation = RotateVecter (t_deltaRotation, this.transform, myExit.transform);
-			t_camera.transform.rotation = Quaternion.Euler (myExit.transform.position + t_deltaRotation);
+			t_camera.transform.rotation = Quaternion.Euler (myExit.transform.rotation.eulerAngles + t_deltaRotation);
 
 
 			other.GetComponent<Rigidbody> ().velocity = 
@@ -52,21 +70,8 @@ public class CS_Portal : MonoBehaviour {
 				RotateVecter (other.GetComponent<CS_PlayerControl> ().GetLaunchpad (), this.transform, myExit.transform)
 			);
 
+
 			t_camera.GetComponent<ReplacementShaderEffect> ().ChangeColors (myStartColor, myMidColor, myEndColor);
-
-//			myCopy.transform.position = myExit.transform.position;
-//			myCopy.transform.rotation = myExit.transform.rotation;
-			//myCopy.transform.position += myCopy.transform.forward;
-			//myCopy.transform.Rotate (other.transform.up, 180);
-
-			//other.transform.parent = null;
-			//other.GetComponent<CS_PlayerControl> ().GetMyCamera ().transform.parent = null;
-
-			//myCopy.transform.position = this.transform.position;
-			//myCopy.transform.rotation = this.transform.rotation;
-
-//			other.transform.position = myExit.transform.position + myExit.transform.forward;
-//			Camera.main.transform.position = Camera.main.transform.position - this.transform.position + myExit.transform.position + myExit.transform.forward;
 
 			CS_AudioManager.Instance.PlaySnapshotAdd (myExitLevelNumber);
 		}
