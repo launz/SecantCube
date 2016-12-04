@@ -292,15 +292,20 @@ public class CS_PlayerControl : MonoBehaviour {
 
 		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || Input.GetButton ("Jump")) {
 			myLaunchpad_IsOn = false;
+			//myLaunchpad_Velocity = Vector3.zero;
 			return;
 		}
-
+		Debug.Log ("Launchpad");
 		myRigidbody.velocity = myLaunchpad_Velocity;
 	}
 
 	public void StartLaunchpad (Vector3 g_velocity) {
-		myLaunchpad_Velocity = g_velocity;
+		SetLaunchpad (g_velocity);
 		myLaunchpad_IsOn = true;
+	}
+
+	public void SetLaunchpad (Vector3 g_velocity) {
+		myLaunchpad_Velocity = g_velocity;
 	}
 
 	public Vector3 GetLaunchpad () {

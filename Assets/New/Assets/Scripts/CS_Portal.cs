@@ -48,7 +48,7 @@ public class CS_Portal : MonoBehaviour {
 				RotateVecter (other.GetComponent<CS_PlayerControl> ().GetMyCameraCenterDelta (), this.transform, myExit.transform)
 			);
 
-			other.GetComponent<CS_PlayerControl> ().StartLaunchpad (
+			other.GetComponent<CS_PlayerControl> ().SetLaunchpad (
 				RotateVecter (other.GetComponent<CS_PlayerControl> ().GetLaunchpad (), this.transform, myExit.transform)
 			);
 
