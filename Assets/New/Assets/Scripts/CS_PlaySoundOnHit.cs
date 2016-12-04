@@ -17,6 +17,7 @@ public class CS_PlaySoundOnHit : MonoBehaviour {
 
 	void Start () {
 		myParticleEffect = Instantiate (myParticleEffect, this.transform) as GameObject; 
+		myParticleEffect.transform.position = this.transform.position;
 		this.GetComponent<Renderer> ().material.color = myColorNormal;
 	}
 
