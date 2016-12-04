@@ -62,6 +62,16 @@ public class CS_PlayerControl : MonoBehaviour {
 	[Header("Launchpad")]
 	private bool myLaunchpad_IsOn;
 	private Vector3 myLaunchpad_Velocity;
+
+	[Header("MoveDisplay")]
+	[SerializeField] TrailRenderer[] myTrail_Array;
+	[SerializeField] float myTrail_MaxWidth = 0.5f;
+	[SerializeField] Color myTrail_MaxColor = new Color (1, 1, 1, 0.5f);
+	[SerializeField] float myTrail_Ratio = 120;
+	[SerializeField] float myTrail_Speed = 1;
+	private float myTrail_Percentage = 0;
+	private Color myTrail_CurrentColor = Color.white;
+
 	// Use this for initialization
 	void Start () {
 		if (myCamera == null) {
@@ -140,15 +150,16 @@ public class CS_PlayerControl : MonoBehaviour {
 		UpdateCamera ();
 		UpdateCameraShake ();
 		UpdateLaunchpad ();
+		UpdateTrail ();
 	}
 
-	void OnDrawGizmos(){
-		Gizmos.color = Color.red;
-		float translationHorizontal = Input.GetAxis("Horizontal") * myHorizontalForce * Time.deltaTime;
-
-		Gizmos.DrawRay (transform.position, myCamera.transform.right * translationHorizontal);
-		Gizmos.DrawSphere (transform.position + myCamera.transform.up * 2f,0.3f);
-	}
+//	void OnDrawGizmos(){
+//		Gizmos.color = Color.red;
+//		float translationHorizontal = Input.GetAxis("Horizontal") * myHorizontalForce * Time.deltaTime;
+//
+//		Gizmos.DrawRay (transform.position, myCamera.transform.right * translationHorizontal);
+//		Gizmos.DrawSphere (transform.position + myCamera.transform.up * 2f,0.3f);
+//	}
 
 	private void UpdateCamera () {
 		Vector3 t_targetPosition = this.transform.position - myCamera.transform.position;
@@ -284,6 +295,18 @@ public class CS_PlayerControl : MonoBehaviour {
 			t_fieldOfView, 
 			Time.deltaTime * myFieldOfView_Speed
 		);
+	}
+
+	private void UpdateTrail () {
+		//set trail display percentage
+		float t_percentage = 1 - myTrail_Ratio / (myRigidbody.velocity.magnitude + myTrail_Ratio);
+		//drag
+		myTrail_Percentage = Mathf.Lerp (myTrail_Percentage, t_percentage, Time.deltaTime * myBlur_Speed);
+		myTrail_CurrentColor = new Color (myTrail_MaxColor.r, myTrail_MaxColor.g, myTrail_MaxColor.b, myTrail_MaxColor.a * myTrail_Percentage);
+		foreach (TrailRenderer t_trail in myTrail_Array) {
+			t_trail.startWidth = myTrail_Percentage * myTrail_MaxWidth;
+			t_trail.material.color = myTrail_CurrentColor;
+		}
 	}
 
 	private void UpdateLaunchpad () {
