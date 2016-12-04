@@ -197,7 +197,8 @@ public class CS_PlayerControl : MonoBehaviour {
 	}
 
 	private void UpdateBoost () {
-		if (Input.GetButton ("Jump")) {
+		if (Input.GetButton ("Jump") || myLaunchpad_IsOn) {
+			Debug.Log ("Boost");
 			//Debug.Log ("myBoost_EnergyCurrent: " + myBoost_EnergyCurrent);		
 			//if has energy
 			if (myBoost_EnergyCurrent > 0) {
