@@ -12,6 +12,8 @@ public class CS_Portal : MonoBehaviour {
 	[SerializeField] GameObject myShowLevel;
 	[SerializeField] GameObject myHideLevel;
 
+	private Quaternion myRotation;
+
 //	private GameObject myCopy;
 
 	void Start () {
@@ -19,7 +21,19 @@ public class CS_Portal : MonoBehaviour {
 //		myCopy = new GameObject ();
 //		myCopy.transform.position = this.transform.position;
 //		myCopy.transform.rotation = this.transform.rotation;
+
+		myRotation = this.transform.rotation;
 	}
+
+	void Update () {
+		//SetIsOn (true);
+		//		myCopy = new GameObject ();
+		//		myCopy.transform.position = this.transform.position;
+		//		myCopy.transform.rotation = this.transform.rotation;
+
+		this.transform.rotation = myRotation;
+	}
+
 
 	void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && isOn == true) {
