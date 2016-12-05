@@ -196,6 +196,11 @@ public class CS_PlayerControl : MonoBehaviour {
 
 	}
 
+	public void BoostForever () {
+		myBoost_UsePerSecond = 0;
+		myRigidbody.useGravity = false;
+	}
+
 	private void UpdateBoost () {
 		if (Input.GetButton ("Jump") || myLaunchpad_IsOn) {
 //			Debug.Log ("Boost");
