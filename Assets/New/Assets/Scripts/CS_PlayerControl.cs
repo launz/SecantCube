@@ -356,7 +356,7 @@ public class CS_PlayerControl : MonoBehaviour {
 	}
 
 	private void StopLaunchpad (Transform g_collide) {
-		if (g_collide.tag != CS_Global.TAG_LAUNCHPAD && g_collide.tag != CS_Global.TAG_PORTAL)
+		if (g_collide.tag != CS_Global.TAG_LAUNCHPAD && g_collide.tag != CS_Global.TAG_BOOST && g_collide.tag != CS_Global.TAG_PORTAL)
 			myLaunchpad_IsOn = false;
 	}
 
