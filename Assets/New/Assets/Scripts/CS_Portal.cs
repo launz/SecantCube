@@ -11,6 +11,7 @@ public class CS_Portal : MonoBehaviour {
 
 	[SerializeField] GameObject myShowLevel;
 	[SerializeField] GameObject myHideLevel;
+	[SerializeField] bool myPlayerBoostForever;
 
 	private Quaternion myRotation;
 
@@ -37,6 +38,9 @@ public class CS_Portal : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.tag == "Player" && isOn == true) {
+
+			if (myPlayerBoostForever)
+				other.GetComponent<CS_PlayerControl> ().BoostForever ();
 
 			myExit.GetComponent<CS_Portal> ().SetIsOn (false);
 
