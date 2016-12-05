@@ -23,7 +23,7 @@ public class CS_Portal : MonoBehaviour {
 //		myCopy.transform.position = this.transform.position;
 //		myCopy.transform.rotation = this.transform.rotation;
 
-		myRotation = this.transform.rotation;
+		myRotation = this.transform.localRotation;
 	}
 
 	void Update () {
