@@ -42,6 +42,7 @@ public class CS_AudioManager : MonoBehaviour {
 		t_SFX.GetComponent<AudioSource> ().clip = g_SFX;
 		t_SFX.GetComponent<AudioSource> ().Play ();
 		DestroyObject(t_SFX, g_SFX.length);
+
 	}
 
 	public void PlaySFX (AudioClip g_SFX, float g_Volume) {

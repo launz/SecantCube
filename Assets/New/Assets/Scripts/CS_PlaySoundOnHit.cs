@@ -3,6 +3,7 @@ using System.Collections;
 
 public class CS_PlaySoundOnHit : MonoBehaviour {
 	[SerializeField] AudioClip mySFX;
+	private AudioSource myAudioSource;
 	[SerializeField] float myVolume = 0;
 	[SerializeField] float myPitch = 1;
 
@@ -19,6 +20,8 @@ public class CS_PlaySoundOnHit : MonoBehaviour {
 		myParticleEffect = Instantiate (myParticleEffect, this.transform) as GameObject; 
 		myParticleEffect.transform.position = this.transform.position;
 		this.GetComponent<Renderer> ().material.color = myColorNormal;
+
+		myAudioSource = this.GetComponent<AudioSource> ();
 	}
 
 	void Update () {
@@ -45,9 +48,16 @@ public class CS_PlaySoundOnHit : MonoBehaviour {
 
 	public void PlaySFX () {
 		if (myVolume == 0) {
-			CS_AudioManager.Instance.PlaySFX_Pitch (mySFX, myPitch);
-		} else
-			CS_AudioManager.Instance.PlaySFX_Pitch (mySFX, myVolume, myPitch);
+			myAudioSource.clip = mySFX;
+			myAudioSource.pitch = myPitch;
+			myAudioSource.volume = 1;
+			myAudioSource.Play ();
+		} else {
+			myAudioSource.clip = mySFX;
+			myAudioSource.pitch = myPitch;
+			myAudioSource.volume = myVolume;
+			myAudioSource.Play ();
+		}
 	}
 		
 }
