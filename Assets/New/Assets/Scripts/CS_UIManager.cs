@@ -9,6 +9,10 @@ public class CS_UIManager : MonoBehaviour {
 	[SerializeField] Transform[] myOptions;
 	private int myOptionCurrent = 1;
 	private Vector3 myOptionTargetPosition;
+
+	private int myOptionSign = 1;
+	private float myOptionTimer = 1;
+	private float myOptionMaxTime = 1;
 	// Use this for initialization
 	void Start () {
 		myMenu.SetActive (false);
@@ -31,25 +35,28 @@ public class CS_UIManager : MonoBehaviour {
 			if (Input.GetButtonDown ("Pause")) {
 				Continue ();
 			}
-				
-			if (Input.GetButtonDown ("Horizontal")) {
-				//Debug.Log (t_Horizontal);
-				//float t_Horizontal = Input.GetAxisRaw ("Horizontal");
+
+
+			if (Input.GetAxisRaw ("Horizontal") == 0)
+				myOptionTimer = 0;
+			
+			if (myOptionTimer <= 0) {
 				if (Input.GetAxisRaw ("Horizontal") > 0) {
 					myOptionCurrent++;
 					if (myOptionCurrent >= myOptions.Length)
 						myOptionCurrent -= myOptions.Length;
-				} else {
+					myOptionTimer = myOptionMaxTime;
+				} else if (Input.GetAxisRaw ("Horizontal") < 0) {
 					myOptionCurrent--;
 					if (myOptionCurrent < 0)
 						myOptionCurrent += myOptions.Length;
+					myOptionTimer = myOptionMaxTime;
 				}
-					
-				Debug.Log (myOptionCurrent);
-
-				//myHighlight.position = Vector3.Lerp (myHighlight.position, myOptions [myOptionCurrent].position, 0.1f);
-				//myOptions [myOptionCurrent].position;
+				//Debug.Log (myOptionCurrent);
+			} else {
+				myOptionTimer -= Time.deltaTime;
 			}
+
 
 			if (Input.GetButtonDown ("Jump")) {
 				switch (myOptionCurrent) {
