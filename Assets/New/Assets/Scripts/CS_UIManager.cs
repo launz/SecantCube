@@ -85,6 +85,7 @@ public class CS_UIManager : MonoBehaviour {
 	private void Restart () {
 		Time.timeScale = 1;
 		SceneManager.LoadScene (0);
+		CS_AudioManager.Instance.ResetSnapshot ();
 	}
 
 	private void Continue () {

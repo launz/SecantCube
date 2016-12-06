@@ -122,4 +122,9 @@ public class CS_AudioManager : MonoBehaviour {
 		myMixerSnapshots [g_number].TransitionTo (3f);
 	}
 
+	public void ResetSnapshot () {
+		myMixerSnapshotNumber = 0;
+		myMixerSnapshots [0].TransitionTo (3f);
+	}
+
 }
