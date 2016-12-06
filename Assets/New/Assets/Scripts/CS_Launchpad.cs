@@ -10,6 +10,8 @@ public class CS_Launchpad : MonoBehaviour {
 	[SerializeField] Color myColorHit;
 	[SerializeField] float myColorSpeed = 1;
 
+	[SerializeField] AudioClip mySFX;
+
 	void Start () {
 		this.GetComponent<Renderer> ().material.color = myColorNormal;
 	}
@@ -21,6 +23,8 @@ public class CS_Launchpad : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		if (collision.transform.tag == "Player") {
 			collision.gameObject.GetComponent<CS_PlayerControl> ().StartLaunchpad (this.transform.up * myLaunchSpeed);
+			if (mySFX != null)
+				CS_AudioManager.Instance.PlaySFX (mySFX);
 		}
 
 		this.GetComponent<Renderer> ().material.color = myColorHit;
