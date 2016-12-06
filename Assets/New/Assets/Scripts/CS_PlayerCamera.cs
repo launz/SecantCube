@@ -2,26 +2,28 @@
 using System.Collections;
 
 public class CS_PlayerCamera : MonoBehaviour {
-	private GameObject myPlayer;
-	[SerializeField] float myDistance;
-	[SerializeField] float mySpeed;
+	[SerializeField] GameObject myWater;
 	// Use this for initialization
-	void Start () {
-		myPlayer = GameObject.Find (CS_Global.NAME_PLAYER) as GameObject;
-	}
-	
-	// Update is called once per frame
+//	void Start () {
+//		myWater.SetActive (false);
+//	}
+//	
+//	// Update is called once per frame
 	void Update () {
-		Vector3 t_targetPosition = myPlayer.transform.position - this.transform.position;
-		t_targetPosition.Normalize ();
-		//Debug.Log (t_targetPosition);
-		t_targetPosition = myPlayer.transform.position - t_targetPosition * myDistance;
-		//Debug.Log (t_targetPosition);
-		//Debug.Log (Vector3.Lerp (this.transform.position, t_targetPosition, Time.deltaTime * mySpeed));
-		this.transform.position = Vector3.Lerp (this.transform.position, t_targetPosition, Time.deltaTime * mySpeed);
-
-		this.transform.LookAt (myPlayer.transform);
-
+		if (this.transform.position.y > 0) {
+			HideWater ();
+		} else {
+			ShowWater ();
+		}
 	}
 
+	public void ShowWater () {
+		if (myWater.activeSelf == false)
+			myWater.SetActive (true);
+	}
+
+	public void HideWater () {
+		if (myWater.activeSelf == true)
+			myWater.SetActive (false);
+	}
 }

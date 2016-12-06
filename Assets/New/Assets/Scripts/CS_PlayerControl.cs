@@ -62,6 +62,8 @@ public class CS_PlayerControl : MonoBehaviour {
 	[Header("Launchpad")]
 	private bool myLaunchpad_IsOn;
 	private Vector3 myLaunchpad_Velocity;
+	[SerializeField] float myLaunchpad_MinTime = 1;
+	private float myLaunchpad_Timer;
 
 	[Header("MoveDisplay")]
 	[SerializeField] TrailRenderer[] myTrail_Array;
@@ -197,6 +199,7 @@ public class CS_PlayerControl : MonoBehaviour {
 	}
 
 	public void BoostForever () {
+		myBoost_EnergyCurrent = myBoost_EnergyMax;
 		myBoost_UsePerSecond = 0;
 		myRigidbody.useGravity = false;
 	}
@@ -321,16 +324,20 @@ public class CS_PlayerControl : MonoBehaviour {
 		if (myLaunchpad_IsOn == false)
 			return;
 
-		if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || Input.GetButton ("Jump")) {
+		if (myLaunchpad_Timer > 0) {
+			myLaunchpad_Timer -= Time.deltaTime;
+		} else if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || Input.GetButton ("Jump")) {
 			myLaunchpad_IsOn = false;
 			//myLaunchpad_Velocity = Vector3.zero;
 			return;
 		}
+			
 		Debug.Log ("Launchpad");
 		myRigidbody.velocity = myLaunchpad_Velocity;
 	}
 
 	public void StartLaunchpad (Vector3 g_velocity) {
+		myLaunchpad_Timer = myLaunchpad_MinTime;
 		SetLaunchpad (g_velocity);
 		myLaunchpad_IsOn = true;
 	}
@@ -356,7 +363,7 @@ public class CS_PlayerControl : MonoBehaviour {
 	}
 
 	private void StopLaunchpad (Transform g_collide) {
-		if (g_collide.tag != CS_Global.TAG_LAUNCHPAD && g_collide.tag != CS_Global.TAG_PORTAL)
+		if (g_collide.tag != CS_Global.TAG_LAUNCHPAD && g_collide.tag != CS_Global.TAG_BOOST && g_collide.tag != CS_Global.TAG_PORTAL)
 			myLaunchpad_IsOn = false;
 	}
 
