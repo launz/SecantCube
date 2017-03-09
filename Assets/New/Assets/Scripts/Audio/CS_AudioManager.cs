@@ -112,8 +112,8 @@ public class CS_AudioManager : MonoBehaviour {
 	//========================================================================
 
 	public void PlaySnapshotAdd (int g_number) {
-		if (g_number <= myMixerSnapshotNumber)
-			return;
+		//if (g_number <= myMixerSnapshotNumber)
+		//	return;
 
 		if (myMixerSnapshotNumber >= myMixerSnapshots.Length)
 			myMixerSnapshotNumber = myMixerSnapshots.Length - 1;
