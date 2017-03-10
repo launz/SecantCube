@@ -352,12 +352,14 @@ public class CS_PlayerControl : MonoBehaviour {
 
 	void OnCollisionStay (Collision g_collision) {
 		BoostRecover (g_collision.transform);
+		BoostLose (g_collision.transform);
 		//Debug.Log ("Hit" + g_collision.transform.name);
 		StopLaunchpad (g_collision.transform);
 	}
 
 	void OnTriggerStay(Collider g_other) {
 		BoostRecover (g_other.transform);
+		BoostLose (g_other.transform);
 		//Debug.Log ("Hit" + g_other.transform.name);
 		StopLaunchpad (g_other.transform);
 	}
@@ -370,8 +372,8 @@ public class CS_PlayerControl : MonoBehaviour {
 			myLaunchpad_IsOn = false;
 	}
 
-	private void BoostRecover (Transform g_collide) {
-		if (g_collide.tag != CS_Global.TAG_BOOST)
+	private void BoostRecover (Transform g_Transform) {
+		if (g_Transform.tag != CS_Global.TAG_BOOST)
 			return;
 
 		//recharge boost energy
@@ -382,6 +384,13 @@ public class CS_PlayerControl : MonoBehaviour {
 		//check if the boost energy > max
 		if (myBoost_EnergyCurrent > myBoost_EnergyMax)
 			myBoost_EnergyCurrent = myBoost_EnergyMax;
+	}
+
+	private void BoostLose (Transform g_Transform) {
+		if (g_Transform.tag != CS_Global.TAG_BOOSTLOSE)
+			return;
+
+		myBoost_EnergyCurrent = 0;
 	}
 
 	public GameObject GetMyCamera () {
