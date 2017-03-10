@@ -368,7 +368,10 @@ public class CS_PlayerControl : MonoBehaviour {
 		if (myLaunchpad_Timer > 0)
 			return;
 		
-		if (g_collide.tag != CS_Global.TAG_LAUNCHPAD && g_collide.tag != CS_Global.TAG_BOOST && g_collide.tag != CS_Global.TAG_PORTAL)
+		if (g_collide.tag != CS_Global.TAG_LAUNCHPAD && 
+			g_collide.tag != CS_Global.TAG_BOOST && 
+			g_collide.tag != CS_Global.TAG_BOOSTLOSE && 
+			g_collide.tag != CS_Global.TAG_PORTAL)
 			myLaunchpad_IsOn = false;
 	}
 
