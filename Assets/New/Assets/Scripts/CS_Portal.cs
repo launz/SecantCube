@@ -59,6 +59,7 @@ public class CS_Portal : MonoBehaviour {
 			}
 //			Debug.LogError ("!!!!");
 			GameObject t_camera = other.GetComponent<CS_PlayerControl> ().GetMyCamera ();
+			GameObject t_cameraReal = other.GetComponent<CS_PlayerControl> ().GetMyCameraReal ();
 
 			Vector3 t_deltaPosition = other.transform.position - this.transform.position;
 			t_deltaPosition = RotateVecter (t_deltaPosition, this.transform, myExit.transform);
@@ -89,7 +90,7 @@ public class CS_Portal : MonoBehaviour {
 			);
 
 
-			t_camera.GetComponent<ReplacementShaderEffect> ().ChangeColors (myStartColor, myMidColor, myEndColor);
+			t_cameraReal.GetComponent<ReplacementShaderEffect> ().ChangeColors (myStartColor, myMidColor, myEndColor);
 
 			CS_AudioManager.Instance.PlaySnapshotAdd (myExitLevelNumber);
 		}

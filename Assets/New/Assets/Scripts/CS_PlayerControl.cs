@@ -14,6 +14,7 @@ public class CS_PlayerControl : MonoBehaviour {
 
 	[Header("Camera")]
 	[SerializeField] GameObject myCamera;
+	[SerializeField] GameObject myCameraReal;
 	[SerializeField] Transform myCameraCollide;
 
 	[SerializeField] float myCameraDistance = 10;
@@ -22,6 +23,9 @@ public class CS_PlayerControl : MonoBehaviour {
 	private Vector3 myCameraCenterDelta;
 	[SerializeField] float myCameraCenterDistanceRatio = 0.5f;
 	[SerializeField] float myCameraCenterSpeed = 4;
+
+	[SerializeField] float myCameraRealDistance = 3;
+	[SerializeField] float myCameraRealDistance_Speed = 10;
 
 	[Header("Shake")]
 	[SerializeField] float myShake_Max = 1;
@@ -90,8 +94,17 @@ public class CS_PlayerControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		float translationVertical = Input.GetAxis("Vertical") * myVerticalForce * Time.deltaTime;
-		float translationHorizontal = Input.GetAxis("Horizontal") * myHorizontalForce * Time.deltaTime;
+		float t_Vertical = Input.GetAxis ("Vertical");
+		float t_Horizontal = Input.GetAxis ("Horizontal");
+
+		if (t_Horizontal > 0.1f || t_Vertical > 0.1f) {
+			Vector2 t_direction = new Vector2 (t_Horizontal, t_Vertical).normalized * myCameraRealDistance;
+			t_direction = Vector3.Lerp (myCameraReal.transform.localPosition, t_direction, Time.deltaTime * myCameraRealDistance_Speed).normalized;
+			myCameraReal.transform.localPosition = t_direction * myCameraRealDistance;
+		}
+
+		float translationVertical = t_Vertical * myVerticalForce * Time.deltaTime;
+		float translationHorizontal = t_Horizontal * myHorizontalForce * Time.deltaTime;
 
 		float t_nextAngle = Vector3.Angle (
 			(myCamera.transform.position + myCamera.transform.up * translationVertical - this.transform.position), 
@@ -196,6 +209,8 @@ public class CS_PlayerControl : MonoBehaviour {
 
 		myCamera.GetComponent<Rigidbody> ().velocity = Vector3.zero;
 
+
+
 	}
 
 	public void BoostForever () {
@@ -258,8 +273,8 @@ public class CS_PlayerControl : MonoBehaviour {
 						myBlur_Max - myBlur_Min
 					)));
 
-		myCamera.GetComponent<MotionBlur> ().blurAmount = Mathf.Lerp (
-			myCamera.GetComponent<MotionBlur> ().blurAmount, 
+		myCameraReal.GetComponent<MotionBlur> ().blurAmount = Mathf.Lerp (
+			myCameraReal.GetComponent<MotionBlur> ().blurAmount, 
 			t_blur, 
 			Time.deltaTime * myBlur_Speed
 		);
@@ -301,8 +316,8 @@ public class CS_PlayerControl : MonoBehaviour {
 						myFieldOfView_Max - myFieldOfView_Min
 					)));
 
-		myCamera.GetComponent<Camera> ().fieldOfView = Mathf.Lerp (
-			myCamera.GetComponent<Camera> ().fieldOfView, 
+		myCameraReal.GetComponent<Camera> ().fieldOfView = Mathf.Lerp (
+			myCameraReal.GetComponent<Camera> ().fieldOfView, 
 			t_fieldOfView, 
 			Time.deltaTime * myFieldOfView_Speed
 		);
@@ -331,8 +346,8 @@ public class CS_PlayerControl : MonoBehaviour {
 			//myLaunchpad_Velocity = Vector3.zero;
 			return;
 		}
-			
-		Debug.Log ("Launchpad");
+//			
+//		Debug.Log ("Launchpad");
 		myRigidbody.velocity = myLaunchpad_Velocity;
 	}
 
@@ -398,6 +413,10 @@ public class CS_PlayerControl : MonoBehaviour {
 
 	public GameObject GetMyCamera () {
 		return myCamera;
+	}
+
+	public GameObject GetMyCameraReal () {
+		return myCameraReal;
 	}
 
 	public Vector3 GetMyCameraCenterDelta () {
