@@ -48,6 +48,7 @@ public class CS_PlayerControl : MonoBehaviour {
 	[SerializeField] float myFieldOfView_Speed = 1;
 
 	[Header("Boost")]
+	[SerializeField] bool myBoost_Forever = false;
 	[SerializeField] float myBoost_Force = 2000;
 	[SerializeField] float myBoost_EnergyMax = 100;
 	private float myBoost_EnergyCurrent;
@@ -219,6 +220,7 @@ public class CS_PlayerControl : MonoBehaviour {
 	}
 
 	public void BoostForever () {
+		myBoost_Forever = true;
 		myBoost_EnergyCurrent = myBoost_EnergyMax;
 		myBoost_UsePerSecond = 0;
 		myRigidbody.useGravity = false;
@@ -232,10 +234,12 @@ public class CS_PlayerControl : MonoBehaviour {
 			if (myBoost_EnergyCurrent > 0) {
 
 				//use boost energy
-				if (myBoost_IsUsedByPercentage)
-					myBoost_EnergyCurrent -= myBoost_UsePerSecond * myBoost_EnergyMax * Time.deltaTime;
-				else
-					myBoost_EnergyCurrent -= myBoost_UsePerSecond * Time.deltaTime;
+				if (myBoost_Forever == false) {
+					if (myBoost_IsUsedByPercentage)
+						myBoost_EnergyCurrent -= myBoost_UsePerSecond * myBoost_EnergyMax * Time.deltaTime;
+					else
+						myBoost_EnergyCurrent -= myBoost_UsePerSecond * Time.deltaTime;
+				}
 
 				//check if the boost energy < 0
 				if (myBoost_EnergyCurrent < 0)
@@ -415,7 +419,8 @@ public class CS_PlayerControl : MonoBehaviour {
 		if (g_Transform.tag != CS_Global.TAG_BOOSTLOSE)
 			return;
 
-		myBoost_EnergyCurrent = 0;
+		if (myBoost_Forever == false)
+			myBoost_EnergyCurrent = 0;
 	}
 
 	public GameObject GetMyCamera () {
