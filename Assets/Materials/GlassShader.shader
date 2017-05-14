@@ -1,4 +1,6 @@
-﻿Shader "Custom/GlassShader" 
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/GlassShader" 
 {
 	Properties 
 	{
@@ -51,7 +53,7 @@
 			v2f_vct vert (vin_vct v)
 			{
 				v2f_vct o;
-				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.color = v.color;
 
 				o.texcoord = v.texcoord;
