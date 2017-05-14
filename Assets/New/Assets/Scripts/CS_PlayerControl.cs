@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.ImageEffects;
+using JellyJoystick;
 
 public class CS_PlayerControl : MonoBehaviour {
 	[Header("Movement")]
@@ -94,8 +95,11 @@ public class CS_PlayerControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		float t_Vertical = Input.GetAxis ("Vertical");
-		float t_Horizontal = Input.GetAxis ("Horizontal");
+//		float t_Vertical = Input.GetAxis ("Vertical");
+//		float t_Horizontal = Input.GetAxis ("Horizontal");
+
+		float t_Vertical = JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_Y);
+		float t_Horizontal = JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_X);
 
 		if (t_Horizontal > 0.1f || t_Vertical > 0.1f) {
 			Vector2 t_direction = new Vector2 (t_Horizontal, t_Vertical).normalized * myCameraRealDistance;
@@ -189,7 +193,8 @@ public class CS_PlayerControl : MonoBehaviour {
 //		myCamera.GetComponent<Rigidbody>().MovePosition( newPosition );
 
 
-		Vector3 t_lookAt = - Input.GetAxis ("Vertical") * myCamera.transform.up + Input.GetAxis ("Horizontal") * myCamera.transform.right;
+		Vector3 t_lookAt = -JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_Y) * myCamera.transform.up +
+		                   JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_X) * myCamera.transform.right;
 //		Vector3 t_lookAt = Input.GetAxis ("Horizontal") * myCamera.transform.right;
 //		Vector3 t_lookAt = new Vector3();
 		t_lookAt = t_lookAt - Vector3.Project (t_lookAt, myCamera.transform.position - this.transform.position);
@@ -220,7 +225,7 @@ public class CS_PlayerControl : MonoBehaviour {
 	}
 
 	private void UpdateBoost () {
-		if (Input.GetButton ("Jump") || myLaunchpad_IsOn) {
+		if (InputGetButtonBoost () || myLaunchpad_IsOn) {
 //			Debug.Log ("Boost");
 			//Debug.Log ("myBoost_EnergyCurrent: " + myBoost_EnergyCurrent);		
 			//if has energy
@@ -282,13 +287,13 @@ public class CS_PlayerControl : MonoBehaviour {
 
 	private void UpdateCameraShake () {
 		float t_shakeIntensity;
-		if (Input.GetButton ("Jump"))
+		if (InputGetButtonBoost ())
 			t_shakeIntensity = myShake_Max -
-				myShake_Ratio / (
-					myRigidbody.velocity.magnitude + (
-						myShake_Ratio / (
-							myShake_Max - myShake_Min
-						)));
+			myShake_Ratio / (
+			    myRigidbody.velocity.magnitude + (
+			        myShake_Ratio / (
+			            myShake_Max - myShake_Min
+			        )));
 		else
 			t_shakeIntensity = 0;
 
@@ -341,7 +346,9 @@ public class CS_PlayerControl : MonoBehaviour {
 
 		if (myLaunchpad_Timer > 0) {
 			myLaunchpad_Timer -= Time.deltaTime;
-		} else if (Input.GetAxis ("Vertical") != 0 || Input.GetAxis ("Horizontal") != 0 || Input.GetButton ("Jump")) {
+		} else if (JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_X) != 0 ||
+		           JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_Y) != 0 ||
+		           InputGetButtonBoost ()) {
 			myLaunchpad_IsOn = false;
 			//myLaunchpad_Velocity = Vector3.zero;
 			return;
@@ -427,4 +434,13 @@ public class CS_PlayerControl : MonoBehaviour {
 		myCameraCenterDelta = g_myCameraCenterDelta;
 	}
 
+	private bool InputGetButtonBoost () {
+		if (JellyJoystickManager.Instance.GetButton (ButtonMethodName.Hold, 1, JoystickButton.A) ||
+		    JellyJoystickManager.Instance.GetButton (ButtonMethodName.Hold, 1, JoystickButton.B) ||
+		    JellyJoystickManager.Instance.GetButton (ButtonMethodName.Hold, 1, JoystickButton.X) ||
+			JellyJoystickManager.Instance.GetButton (ButtonMethodName.Hold, 1, JoystickButton.Y)) {
+			return true;
+		} else
+			return false;
+	}
 }

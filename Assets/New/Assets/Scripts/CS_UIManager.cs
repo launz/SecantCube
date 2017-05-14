@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using JellyJoystick;
 
 public class CS_UIManager : MonoBehaviour {
 	[SerializeField] GameObject myMenu;
@@ -12,7 +13,7 @@ public class CS_UIManager : MonoBehaviour {
 
 	private int myOptionSign = 1;
 	private float myOptionTimer = 1;
-	private float myOptionMaxTime = 1;
+	[SerializeField] float myOptionMaxTime = 1;
 	// Use this for initialization
 	void Start () {
 		myMenu.SetActive (false);
@@ -22,31 +23,31 @@ public class CS_UIManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//update Highlight position
-		myHighlight.position = Vector3.Lerp (myHighlight.position, myOptions [myOptionCurrent].position, Time.fixedDeltaTime * myHighlightSpeed);
+		myHighlight.position = Vector3.Lerp (myHighlight.position, myOptions [myOptionCurrent].position, Time.unscaledDeltaTime * myHighlightSpeed);
 
 
 		if (myMenu.activeSelf == false) {
 			//if menu is not open
-			if (Input.GetButtonDown ("Pause")) {
+			if (JellyJoystickManager.Instance.GetButton (ButtonMethodName.Down, 1, JoystickButton.START)) {
 				Pause ();
 			}
 		} else {
 			//if menu is open
-			if (Input.GetButtonDown ("Pause")) {
+			if (JellyJoystickManager.Instance.GetButton (ButtonMethodName.Down, 1, JoystickButton.START)) {
 				Continue ();
 			}
 
 
-			if (Input.GetAxisRaw ("Horizontal") == 0)
+			if (JellyJoystickManager.Instance.GetAxis (AxisMethodName.Raw, 1, JoystickAxis.LS_X) == 0)
 				myOptionTimer = 0;
 			
 			if (myOptionTimer <= 0) {
-				if (Input.GetAxisRaw ("Horizontal") > 0) {
+				if (JellyJoystickManager.Instance.GetAxis (AxisMethodName.Raw, 1, JoystickAxis.LS_X) > 0) {
 					myOptionCurrent++;
 					if (myOptionCurrent >= myOptions.Length)
 						myOptionCurrent -= myOptions.Length;
 					myOptionTimer = myOptionMaxTime;
-				} else if (Input.GetAxisRaw ("Horizontal") < 0) {
+				} else if (JellyJoystickManager.Instance.GetAxis (AxisMethodName.Raw, 1, JoystickAxis.LS_X) < 0) {
 					myOptionCurrent--;
 					if (myOptionCurrent < 0)
 						myOptionCurrent += myOptions.Length;
@@ -54,11 +55,14 @@ public class CS_UIManager : MonoBehaviour {
 				}
 				//Debug.Log (myOptionCurrent);
 			} else {
-				myOptionTimer -= Time.deltaTime;
+				myOptionTimer -= Time.unscaledDeltaTime;
 			}
 
 
-			if (Input.GetButtonDown ("Jump")) {
+			if (JellyJoystickManager.Instance.GetButton (ButtonMethodName.Down, 1, JoystickButton.A) ||
+			    JellyJoystickManager.Instance.GetButton (ButtonMethodName.Down, 1, JoystickButton.B) ||
+			    JellyJoystickManager.Instance.GetButton (ButtonMethodName.Down, 1, JoystickButton.X) ||
+			    JellyJoystickManager.Instance.GetButton (ButtonMethodName.Down, 1, JoystickButton.Y)) {
 				switch (myOptionCurrent) {
 				case 0: 
 					Restart ();
