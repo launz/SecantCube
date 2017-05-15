@@ -94,7 +94,7 @@ public class CS_PlayerControl : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 
 //		float t_Vertical = Input.GetAxis ("Vertical");
 //		float t_Horizontal = Input.GetAxis ("Horizontal");
@@ -111,7 +111,7 @@ public class CS_PlayerControl : MonoBehaviour {
 
 //	void OnDrawGizmos(){
 //		Gizmos.color = Color.red;
-//		float translationHorizontal = Input.GetAxis("Horizontal") * myHorizontalForce * Time.deltaTime;
+//		float translationHorizontal = Input.GetAxis("Horizontal") * myHorizontalForce * Time.fixedDeltaTime;
 //
 //		Gizmos.DrawRay (transform.position, myCamera.transform.right * translationHorizontal);
 //		Gizmos.DrawSphere (transform.position + myCamera.transform.up * 2f,0.3f);
@@ -126,12 +126,12 @@ public class CS_PlayerControl : MonoBehaviour {
 
 		if (t_Horizontal > 0.1f || t_Vertical > 0.1f) {
 			Vector2 t_direction = new Vector2 (t_Horizontal, t_Vertical).normalized * myCameraRealDistance;
-			t_direction = Vector3.Lerp (myCameraReal.transform.localPosition, t_direction, Time.deltaTime * myCameraRealDistance_Speed).normalized;
+			t_direction = Vector3.Lerp (myCameraReal.transform.localPosition, t_direction, Time.fixedDeltaTime * myCameraRealDistance_Speed).normalized;
 			myCameraReal.transform.localPosition = t_direction * myCameraRealDistance;
 		}
 
-		float translationVertical = t_Vertical * myVerticalForce * Time.deltaTime;
-		float translationHorizontal = t_Horizontal * myHorizontalForce * Time.deltaTime;
+		float translationVertical = t_Vertical * myVerticalForce * Time.fixedDeltaTime;
+		float translationHorizontal = t_Horizontal * myHorizontalForce * Time.fixedDeltaTime;
 
 		float t_nextAngle = Vector3.Angle (
 			(myCamera.transform.position + myCamera.transform.up * translationVertical - this.transform.position), 
@@ -159,7 +159,7 @@ public class CS_PlayerControl : MonoBehaviour {
 			myRigidbody.velocity = (
 				myRigidbody.velocity.normalized + (
 					myCamera.transform.right * translationHorizontal
-				) * Time.deltaTime * myVelocityRatio
+				) * Time.fixedDeltaTime * myVelocityRatio
 			).normalized * myRigidbody.velocity.magnitude;
 		} else {
 			//camera movement
@@ -177,7 +177,7 @@ public class CS_PlayerControl : MonoBehaviour {
 			myRigidbody.velocity = (
 				myRigidbody.velocity.normalized + (
 					myCamera.transform.right * translationHorizontal - myCamera.transform.up * translationVertical
-				) * Time.deltaTime * myVelocityRatio
+				) * Time.fixedDeltaTime * myVelocityRatio
 			).normalized * myRigidbody.velocity.magnitude;
 		}
 
@@ -196,8 +196,8 @@ public class CS_PlayerControl : MonoBehaviour {
 		t_targetPosition = this.transform.position - t_targetPosition * myCameraDistance;
 
 		//Move Camera
-		myCamera.transform.position = Vector3.Lerp (myCamera.transform.position, t_targetPosition, Time.deltaTime * myCameraSpeed);
-//		Vector3 newPosition = Vector3.Lerp(myCamera.transform.position, t_targetPosition, Time.deltaTime * myCameraSpeed);
+		myCamera.transform.position = Vector3.Lerp (myCamera.transform.position, t_targetPosition, Time.fixedDeltaTime * myCameraSpeed);
+//		Vector3 newPosition = Vector3.Lerp(myCamera.transform.position, t_targetPosition, Time.fixedDeltaTime * myCameraSpeed);
 //		myCamera.GetComponent<Rigidbody>().MovePosition( newPosition );
 
 
@@ -210,7 +210,7 @@ public class CS_PlayerControl : MonoBehaviour {
 		if (t_lookAt.magnitude != 0) {
 			t_lookAt = t_lookAt * myCameraCenterDistanceRatio * (myCamera.transform.position - this.transform.position).magnitude;
 			//ease
-			myCameraCenterDelta = Vector3.Lerp (myCameraCenterDelta, t_lookAt, Time.deltaTime * myCameraCenterSpeed);
+			myCameraCenterDelta = Vector3.Lerp (myCameraCenterDelta, t_lookAt, Time.fixedDeltaTime * myCameraCenterSpeed);
 		}
 //		Debug.Log (this.transform.position + " " + myCameraCenterDelta);
 
@@ -243,9 +243,9 @@ public class CS_PlayerControl : MonoBehaviour {
 				//use boost energy
 				if (myBoost_Forever == false) {
 					if (myBoost_IsUsedByPercentage)
-						myBoost_EnergyCurrent -= myBoost_UsePerSecond * myBoost_EnergyMax * Time.deltaTime;
+						myBoost_EnergyCurrent -= myBoost_UsePerSecond * myBoost_EnergyMax * Time.fixedDeltaTime;
 					else
-						myBoost_EnergyCurrent -= myBoost_UsePerSecond * Time.deltaTime;
+						myBoost_EnergyCurrent -= myBoost_UsePerSecond * Time.fixedDeltaTime;
 				}
 
 				//check if the boost energy < 0
@@ -292,7 +292,7 @@ public class CS_PlayerControl : MonoBehaviour {
 		myCameraReal.GetComponent<MotionBlur> ().blurAmount = Mathf.Lerp (
 			myCameraReal.GetComponent<MotionBlur> ().blurAmount, 
 			t_blur, 
-			Time.deltaTime * myBlur_Speed
+			Time.fixedDeltaTime * myBlur_Speed
 		);
 	}
 
@@ -311,7 +311,7 @@ public class CS_PlayerControl : MonoBehaviour {
 		myShake_Intensity = Mathf.Lerp (
 			myShake_Intensity, 
 			t_shakeIntensity, 
-			Time.deltaTime * myShake_Speed
+			Time.fixedDeltaTime * myShake_Speed
 		);
 
 		myCamera.transform.position = myCamera.transform.position + Random.insideUnitSphere * myShake_Intensity;
@@ -335,7 +335,7 @@ public class CS_PlayerControl : MonoBehaviour {
 		myCameraReal.GetComponent<Camera> ().fieldOfView = Mathf.Lerp (
 			myCameraReal.GetComponent<Camera> ().fieldOfView, 
 			t_fieldOfView, 
-			Time.deltaTime * myFieldOfView_Speed
+			Time.fixedDeltaTime * myFieldOfView_Speed
 		);
 	}
 
@@ -343,7 +343,7 @@ public class CS_PlayerControl : MonoBehaviour {
 		//set trail display percentage
 		float t_percentage = 1 - myTrail_Ratio / (myRigidbody.velocity.magnitude + myTrail_Ratio);
 		//drag
-		myTrail_Percentage = Mathf.Lerp (myTrail_Percentage, t_percentage, Time.deltaTime * myBlur_Speed);
+		myTrail_Percentage = Mathf.Lerp (myTrail_Percentage, t_percentage, Time.fixedDeltaTime * myBlur_Speed);
 		myTrail_CurrentColor = new Color (myTrail_MaxColor.r, myTrail_MaxColor.g, myTrail_MaxColor.b, myTrail_MaxColor.a * myTrail_Percentage);
 		foreach (TrailRenderer t_trail in myTrail_Array) {
 			t_trail.startWidth = myTrail_Percentage * myTrail_MaxWidth;
@@ -363,7 +363,7 @@ public class CS_PlayerControl : MonoBehaviour {
 			return;
 
 		if (myLaunchpad_Timer > 0) {
-			myLaunchpad_Timer -= Time.deltaTime;
+			myLaunchpad_Timer -= Time.fixedDeltaTime;
 		} 
 //		else if (JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_X) != 0 ||
 //		           JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_Y) != 0 ||
@@ -410,7 +410,7 @@ public class CS_PlayerControl : MonoBehaviour {
 		if (myLaunchpad_Timer > 0)
 			return;
 
-		Debug.Log ("StopLaunchpad");
+//		Debug.Log ("StopLaunchpad");
 		
 		if (g_collide.tag != CS_Global.TAG_LAUNCHPAD && 
 			g_collide.tag != CS_Global.TAG_BOOST && 
@@ -425,9 +425,9 @@ public class CS_PlayerControl : MonoBehaviour {
 
 		//recharge boost energy
 		if(myBoost_IsRechargedByPercentage)
-			myBoost_EnergyCurrent += myBoost_EnergyMax * myBoost_RechargePerSecond * Time.deltaTime;
+			myBoost_EnergyCurrent += myBoost_EnergyMax * myBoost_RechargePerSecond * Time.fixedDeltaTime;
 		else
-			myBoost_EnergyCurrent +=  myBoost_RechargePerSecond * Time.deltaTime;
+			myBoost_EnergyCurrent +=  myBoost_RechargePerSecond * Time.fixedDeltaTime;
 		//check if the boost energy > max
 		if (myBoost_EnergyCurrent > myBoost_EnergyMax)
 			myBoost_EnergyCurrent = myBoost_EnergyMax;
