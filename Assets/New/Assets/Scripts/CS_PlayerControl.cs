@@ -99,71 +99,7 @@ public class CS_PlayerControl : MonoBehaviour {
 //		float t_Vertical = Input.GetAxis ("Vertical");
 //		float t_Horizontal = Input.GetAxis ("Horizontal");
 
-		float t_Vertical = JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_Y);
-		float t_Horizontal = JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_X);
-
-		if (t_Horizontal > 0.1f || t_Vertical > 0.1f) {
-			Vector2 t_direction = new Vector2 (t_Horizontal, t_Vertical).normalized * myCameraRealDistance;
-			t_direction = Vector3.Lerp (myCameraReal.transform.localPosition, t_direction, Time.deltaTime * myCameraRealDistance_Speed).normalized;
-			myCameraReal.transform.localPosition = t_direction * myCameraRealDistance;
-		}
-
-		float translationVertical = t_Vertical * myVerticalForce * Time.deltaTime;
-		float translationHorizontal = t_Horizontal * myHorizontalForce * Time.deltaTime;
-
-		float t_nextAngle = Vector3.Angle (
-			(myCamera.transform.position + myCamera.transform.up * translationVertical - this.transform.position), 
-			Vector3.up);
-//		Debug.Log (t_nextAngle);
-
-		//camera limit
-//		if (t_nextAngle < 180 - myVerticalLimit && t_nextAngle > myVerticalLimit)
-//			myCamera.transform.position += myCamera.transform.up * translationVertical;
-//		myCamera.transform.position -= myCamera.transform.right * translationHorizontal;
-
-		if ((Mathf.Abs (myCamera.transform.position.y - (this.transform.position + myCameraCenterDelta).y) > Vector3.Distance (myCamera.transform.position, (this.transform.position + myCameraCenterDelta)) * myVerticalLimitRatio) &&
-		    ((myCamera.transform.position.y > (this.transform.position + myCameraCenterDelta).y && translationVertical > 0) ||
-		    (myCamera.transform.position.y < (this.transform.position + myCameraCenterDelta).y && translationVertical < 0))) {
-			//camera movement
-			myCamera.transform.position = myCamera.transform.position - 
-				myCamera.transform.right * translationHorizontal;
-			//Debug.Log ("Limit");
-//			myCamera.GetComponent<Rigidbody> ().MovePosition (
-//				myCamera.transform.position -
-//				myCamera.transform.right * translationHorizontal
-//			);
-
-			//player movement
-			myRigidbody.velocity = (
-			    myRigidbody.velocity.normalized + (
-			        myCamera.transform.right * translationHorizontal
-			    ) * Time.deltaTime * myVelocityRatio
-			).normalized * myRigidbody.velocity.magnitude;
-		} else {
-			//camera movement
-			myCamera.transform.position = myCamera.transform.position + 
-				myCamera.transform.up * translationVertical - 
-				myCamera.transform.right * translationHorizontal;
-			
-//			myCamera.GetComponent<Rigidbody> ().MovePosition (
-//				myCamera.transform.position +
-//				myCamera.transform.up * translationVertical -
-//				myCamera.transform.right * translationHorizontal
-//			);
-
-			//player movement
-			myRigidbody.velocity = (
-				myRigidbody.velocity.normalized + (
-					myCamera.transform.right * translationHorizontal - myCamera.transform.up * translationVertical
-				) * Time.deltaTime * myVelocityRatio
-			).normalized * myRigidbody.velocity.magnitude;
-		}
-
-
-
-		//airResistance
-		myRigidbody.AddForce(-myRigidbody.velocity.normalized * myRigidbody.velocity.magnitude * myRigidbody.velocity.magnitude * myAirResistance);
-
+		UpdateMove ();
 		UpdateBoost ();
 		UpdateCameraBlur ();
 		UpdateCameraFieldOfView ();
@@ -180,6 +116,77 @@ public class CS_PlayerControl : MonoBehaviour {
 //		Gizmos.DrawRay (transform.position, myCamera.transform.right * translationHorizontal);
 //		Gizmos.DrawSphere (transform.position + myCamera.transform.up * 2f,0.3f);
 //	}
+
+	private void UpdateMove () {
+		if (myLaunchpad_IsOn)
+			return;
+		
+		float t_Vertical = JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_Y);
+		float t_Horizontal = JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_X);
+
+		if (t_Horizontal > 0.1f || t_Vertical > 0.1f) {
+			Vector2 t_direction = new Vector2 (t_Horizontal, t_Vertical).normalized * myCameraRealDistance;
+			t_direction = Vector3.Lerp (myCameraReal.transform.localPosition, t_direction, Time.deltaTime * myCameraRealDistance_Speed).normalized;
+			myCameraReal.transform.localPosition = t_direction * myCameraRealDistance;
+		}
+
+		float translationVertical = t_Vertical * myVerticalForce * Time.deltaTime;
+		float translationHorizontal = t_Horizontal * myHorizontalForce * Time.deltaTime;
+
+		float t_nextAngle = Vector3.Angle (
+			(myCamera.transform.position + myCamera.transform.up * translationVertical - this.transform.position), 
+			Vector3.up);
+		//		Debug.Log (t_nextAngle);
+
+		//camera limit
+		//		if (t_nextAngle < 180 - myVerticalLimit && t_nextAngle > myVerticalLimit)
+		//			myCamera.transform.position += myCamera.transform.up * translationVertical;
+		//		myCamera.transform.position -= myCamera.transform.right * translationHorizontal;
+
+		if ((Mathf.Abs (myCamera.transform.position.y - (this.transform.position + myCameraCenterDelta).y) > Vector3.Distance (myCamera.transform.position, (this.transform.position + myCameraCenterDelta)) * myVerticalLimitRatio) &&
+			((myCamera.transform.position.y > (this.transform.position + myCameraCenterDelta).y && translationVertical > 0) ||
+				(myCamera.transform.position.y < (this.transform.position + myCameraCenterDelta).y && translationVertical < 0))) {
+			//camera movement
+			myCamera.transform.position = myCamera.transform.position - 
+				myCamera.transform.right * translationHorizontal;
+			//Debug.Log ("Limit");
+			//			myCamera.GetComponent<Rigidbody> ().MovePosition (
+			//				myCamera.transform.position -
+			//				myCamera.transform.right * translationHorizontal
+			//			);
+
+			//player movement
+			myRigidbody.velocity = (
+				myRigidbody.velocity.normalized + (
+					myCamera.transform.right * translationHorizontal
+				) * Time.deltaTime * myVelocityRatio
+			).normalized * myRigidbody.velocity.magnitude;
+		} else {
+			//camera movement
+			myCamera.transform.position = myCamera.transform.position + 
+				myCamera.transform.up * translationVertical - 
+				myCamera.transform.right * translationHorizontal;
+
+			//			myCamera.GetComponent<Rigidbody> ().MovePosition (
+			//				myCamera.transform.position +
+			//				myCamera.transform.up * translationVertical -
+			//				myCamera.transform.right * translationHorizontal
+			//			);
+
+			//player movement
+			myRigidbody.velocity = (
+				myRigidbody.velocity.normalized + (
+					myCamera.transform.right * translationHorizontal - myCamera.transform.up * translationVertical
+				) * Time.deltaTime * myVelocityRatio
+			).normalized * myRigidbody.velocity.magnitude;
+		}
+
+
+
+		//airResistance
+		myRigidbody.AddForce(-myRigidbody.velocity.normalized * myRigidbody.velocity.magnitude * myRigidbody.velocity.magnitude * myAirResistance);
+
+	}
 
 	private void UpdateCamera () {
 		Vector3 t_targetPosition = this.transform.position - myCamera.transform.position;
@@ -344,19 +351,27 @@ public class CS_PlayerControl : MonoBehaviour {
 		}
 	}
 
+	public void ClearTrail () {
+		this.GetComponent<TrailRenderer> ().Clear ();
+		foreach (TrailRenderer t_trail in myTrail_Array) {
+			t_trail.Clear ();
+		}
+	}
+
 	private void UpdateLaunchpad () {
 		if (myLaunchpad_IsOn == false)
 			return;
 
 		if (myLaunchpad_Timer > 0) {
 			myLaunchpad_Timer -= Time.deltaTime;
-		} else if (JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_X) != 0 ||
-		           JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_Y) != 0 ||
-		           InputGetButtonBoost ()) {
-			myLaunchpad_IsOn = false;
-			//myLaunchpad_Velocity = Vector3.zero;
-			return;
-		}
+		} 
+//		else if (JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_X) != 0 ||
+//		           JellyJoystickManager.Instance.GetAxis (AxisMethodName.Normal, 1, JoystickAxis.LS_Y) != 0 ||
+//		           InputGetButtonBoost ()) {
+//			myLaunchpad_IsOn = false;
+//			//myLaunchpad_Velocity = Vector3.zero;
+//			return;
+//		}
 //			
 //		Debug.Log ("Launchpad");
 		myRigidbody.velocity = myLaunchpad_Velocity;
@@ -366,6 +381,7 @@ public class CS_PlayerControl : MonoBehaviour {
 		myLaunchpad_Timer = myLaunchpad_MinTime;
 		SetLaunchpad (g_velocity);
 		myLaunchpad_IsOn = true;
+		Debug.Log ("StartLaunchpad");
 	}
 
 	public void SetLaunchpad (Vector3 g_velocity) {
@@ -393,6 +409,8 @@ public class CS_PlayerControl : MonoBehaviour {
 	private void StopLaunchpad (Transform g_collide) {
 		if (myLaunchpad_Timer > 0)
 			return;
+
+		Debug.Log ("StopLaunchpad");
 		
 		if (g_collide.tag != CS_Global.TAG_LAUNCHPAD && 
 			g_collide.tag != CS_Global.TAG_BOOST && 

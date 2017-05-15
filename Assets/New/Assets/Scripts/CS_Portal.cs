@@ -89,6 +89,8 @@ public class CS_Portal : MonoBehaviour {
 				RotateVecter (other.GetComponent<CS_PlayerControl> ().GetLaunchpad (), this.transform, myExit.transform)
 			);
 
+			other.GetComponent<CS_PlayerControl> ().ClearTrail ();
+
 
 			t_cameraReal.GetComponent<ReplacementShaderEffect> ().ChangeColors (myStartColor, myMidColor, myEndColor);
 
