@@ -10,6 +10,8 @@ public class CS_AudioManager : MonoBehaviour {
 
 	[SerializeField] GameObject myPrefabSFX;
 
+	[SerializeField] AudioClip levelRotateSound;
+
 	[SerializeField] AudioSource myAudioSource;
 
 	[SerializeField] AudioMixer myAudioMixer;

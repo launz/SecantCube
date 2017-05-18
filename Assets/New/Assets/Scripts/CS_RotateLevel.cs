@@ -18,29 +18,45 @@ public class CS_RotateLevel : MonoBehaviour {
 	[SerializeField] float myShake_Ratio = 120;
 	[SerializeField] float myShake_Speed = 10;
 	private float myShake_Intensity = 0;
+
+
+
 	// Use this for initialization
 	void Start () {
+
 		myTargetRotation = this.transform.rotation;
 		myCamera = Camera.main;
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (myRotationCenter == null)
-			return;
 
-		if (this.transform.rotation == myTargetRotation)
+
+
+		if (myRotationCenter == null) 
 			return;
+	
+			
+		if (this.transform.rotation == myTargetRotation) 
+			return;
+		
+
 
 		if (Quaternion.Angle(this.transform.rotation, myTargetRotation) < myRotationStopAngle) {
-			Debug.Log (Quaternion.Angle(this.transform.rotation, myTargetRotation));
+			//Debug.Log (Quaternion.Angle(this.transform.rotation, myTargetRotation));
+		
 			this.transform.rotation = myTargetRotation;
 			this.transform.position = myRotationCenterPosition - myRotationCenter.position + this.transform.position;
 			return;
 		}
 
+	
+	
+
+
 		UpdateCameraShake ();
-		Debug.Log("rotate!!!!!!" + myTargetRotation.eulerAngles);
+		//Debug.Log("rotate!!!!!!" + myTargetRotation.eulerAngles);
 //		Vector3.Lerp (this.transform.rotation.eulerAngles, myTargetRotation.eulerAngles, Time.deltaTime * myRotationSpeed);
 //		this.transform.rotation = myTargetRotation;
 		this.transform.rotation = Quaternion.Lerp (this.transform.rotation, myTargetRotation, Time.deltaTime * myRotationSpeed);

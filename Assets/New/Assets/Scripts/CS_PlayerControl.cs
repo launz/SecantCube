@@ -80,6 +80,7 @@ public class CS_PlayerControl : MonoBehaviour {
 	private float myTrail_Percentage = 0;
 	private Color myTrail_CurrentColor = Color.white;
 
+
 	// Use this for initialization
 	void Start () {
 		if (myCamera == null) {
